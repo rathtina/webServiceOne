@@ -1,13 +1,12 @@
 # -------- Build Stage --------
-FROM maven:3.9.6-openjdk-21 AS builder
-WORKDIR /app
+FROM maven:3.8.5-openjdk-17 AS builder
 COPY . .
 RUN mvn clean package -DskipTests
 
 # -------- Runtime Stage --------
-FROM openjdk:21-slim
+FROM openjdk:17.0.1-jdk-slim
 WORKDIR /app
-COPY --from=builder /app/target/*.jar app.jar
+COPY --from=builder /target/demo-0.0.1-SNAPSHOT.jar demo.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-jar", "demo.jar"]
 
